@@ -15,7 +15,8 @@ pacman::p_load(readxl, dplyr, tidyr, plyr, stringr, ggplot2, ggthemes, stringi, 
 source("funciones_vacantes.R")
 
 #Leer los datos requeridos para el análisis
-df_mx <- read_excel("data/Vacantes_App_130923.xlsx", guess_max = 50000)
+#df_mx <- read_excel("data/Vacantes_App_130923.xlsx", guess_max = 50000)
+df_mx <- read_excel("C:/Users/MEX-1ZNLJL3/OneDrive - International Youth Foundation/Documentos/Vacantes_App_130923.xlsx", guess_max = 50000)
 
 #Definir lista de areas y de estados
 ar_ls <- unique(df_mx$`Area Amplia`)
