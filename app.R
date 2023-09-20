@@ -16,17 +16,27 @@ source("funciones_vacantes.R")
 
 #Leer los datos requeridos para el análisis
 #df_mx <- read_excel("data/Vacantes_App_130923.xlsx", guess_max = 50000)
-df_mx <- read_excel("C:/Users/MEX-1ZNLJL3/OneDrive - International Youth Foundation/Documentos/Vacantes_App_130923.xlsx", guess_max = 50000)
+
+#Lista de directorios
+direcs <- c(
+        #Directorio de Arturo    
+        "C:/Users/MEX-1ZNLJL3/OneDrive - International Youth Foundation/Documentos/Vacantes_App_130923.xlsx")
+
+#Función para la lectura de la base
+df_mx <- lapply(direcs, readVacs)
+
+#Transformar lista a dataframe
+df_mx <- data.frame(df_mx[!is.na(df_mx)])
 
 #Definir lista de areas y de estados
-ar_ls <- unique(df_mx$`Area Amplia`)
+ar_ls <- unique(df_mx$Area.Amplia)
 
 #Modificar vector de educacion
 df_mx <- edu_rd(df_mx)
 
 #Definir lista de áreas profesionales
-ax <- data.frame(unique(df_mx$`Area Amplia`))
-ax <- ax[order(ax$unique.df_mx..Area.Amplia..),]
+ax <- data.frame(unique(df_mx$Area.Amplia))
+ax <- ax[order(ax$unique.df_mx.Area.Amplia.),]
 
 #Definir lista de programas y trayectos
 ex <- read_excel("data/ProgramasTrayectos_IYFMex_060923.xlsx")
@@ -511,7 +521,7 @@ server <- function(input, output, session){
       #Número de empleos
       output$num_ar1 <- renderText({
         paste("Cantidad de vacantes en el sector:", " ", 
-              df_mx %>% filter(`Area Amplia` == input$area_amplia) %>% nrow())
+              df_mx %>% filter(Area.Amplia == input$area_amplia) %>% nrow())
       })
       #Escolaridad demandada
       output$num_ar2 <- renderText({

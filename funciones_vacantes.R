@@ -6,6 +6,37 @@ theme_app_iyf <- theme(
   axis.title = element_text(size = 10)
 )
 
+#Función para lectura del directorio
+readVacs <- function(path){
+  out <- tryCatch(
+    #Función de búsqueda
+    {
+      #Probar con distintos paths hasta encontrar el correcto
+      read_excel(path, guess_max = 50000)
+    },
+    #Devolución de error
+    error = function(cond){
+      #Mensaje de error
+      message(paste("El directorio no existe:", path))
+      #Valor a retornar en caso de error
+      return(NA)
+    },
+    #Devolución de advertencia
+    warning = function(cond){
+      #Mensaje de advertencia
+      message(paste("El intento de apertura del directorio ha causado una advertencia:", path))
+      #Valor a retornar en caso de advertencia
+      return(NA)
+    },
+    #Mensaje final de ejecución
+    finally = {
+      message(paste("Directorio abierto:", path))
+    }
+  )
+  #Devolver matriz de objetos
+  return(out)
+}
+
 
 #Competencias duras por área
 com_plt <- function(df, no, area, esco, pais){
@@ -84,11 +115,11 @@ esco_sbs <- function(df, area, nvl){
   #Definir si hay subset por nivel de escolaridad
   if(nvl != "Todos"){
   df <- df %>%
-    filter(`Area Amplia` == area) %>%
+    filter(Area.Amplia == area) %>%
     filter(str_detect(Educativo, nvl))
   } else{
     df <- df %>%
-      filter(`Area Amplia` == area)
+      filter(Area.Amplia == area)
   }
 }
 
@@ -177,9 +208,9 @@ ten_ar <- function(df, esco, area, pais){
   
   #Generar grafico de tendencia de publicaciones
   plt5 <- df %>%
-    mutate(`Fecha de Publicacion` = date(`Fecha de Publicacion`)) %>%
+    mutate(Fecha.de.Publicacion = date(Fecha.de.Publicacion)) %>%
     mutate(Vec = 1) %>%
-    group_by(Mes = lubridate::floor_date(`Fecha de Publicacion`, "month")) %>%
+    group_by(Mes = lubridate::floor_date(Fecha.de.Publicacion, "month")) %>%
     dplyr::summarise(sum(Vec)) %>%
     dplyr::rename(Value = `sum(Vec)`) %>%
     ggplot(aes(Mes, Value)) +
@@ -247,15 +278,15 @@ tra_sec <- function(df, pro){
   
   #Generar tabla de datos
   df <- df %>%
-    group_by(Trayecto, `Area Amplia`) %>%
+    group_by(Trayecto, Area.Amplia) %>%
     tally() %>%
     dplyr::rename(Value = n) %>%
-    arrange(Trayecto, desc(`Area Amplia`)) %>%
-    mutate(`Area Amplia` = as.factor(`Area Amplia`)) %>%
+    arrange(Trayecto, desc(Area.Amplia)) %>%
+    mutate(Area.Amplia = as.factor(Area.Amplia)) %>%
     dplyr::top_n(5, Value)
   
   #Generar grafico de posiciones
-  plt3 <- ggdotchart(df, "Area Amplia", "Value",
+  plt3 <- ggdotchart(df, "Area.Amplia", "Value",
                      color = "Trayecto",
                      palette = c("#00AFBB", "#E7B800", "#FC4E07", "brown"),
                      sorting = "descending", 
@@ -388,13 +419,13 @@ sec_est <- function(df, est, no, pais){
   #Generar tabla de demanda sectorial
   df <- df %>%
     filter(Estado == est) %>%
-    group_by(`Area Amplia`) %>%
+    group_by(Area.Amplia) %>%
     tally() %>%
     arrange(desc(n)) %>%
     top_n(no, n)
   
   #Generar gráfico de posiciones
-  plt6 <- ggpubr::ggdotchart(df, x = "Area Amplia", y = "n",
+  plt6 <- ggpubr::ggdotchart(df, x = "Area.Amplia", y = "n",
                              color = "#00AFBB",
                              add = "segments",  
                              sorting = "descending",
@@ -423,7 +454,7 @@ map_sec <- function(pais, ux_mx, ux_cl, df, capas_mx, capas_col, area){
     
     #Generar tabla de demanda estatal del sector
     df <- df %>%
-      filter(`Area Amplia` == area) %>%
+      filter(Area.Amplia == area) %>%
       mutate(Counter = 1) %>%
       group_by(Clave) %>%
       tally(Counter) %>%
@@ -460,7 +491,7 @@ map_sec <- function(pais, ux_mx, ux_cl, df, capas_mx, capas_col, area){
     
     #Generar tabla de demanda estatal del sector
     df <- df %>%
-      filter(`Area Amplia` == area) %>%
+      filter(Area.Amplia == area) %>%
       mutate(Counter = 1) %>%
       group_by(Clave) %>%
       tally(Counter) %>%
