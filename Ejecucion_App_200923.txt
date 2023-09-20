@@ -1,0 +1,10 @@
+#Copiar y pegar en la consola de R
+
+#Cargar librerías necesarias
+#En su primer uso, tomará varios minutos para que se instalen las librerías
+install.packages("shiny")
+library(shiny)
+
+#Cargar aplicación
+#Una vez que se inicialice la aplicación se podrá leer el mensaje "Directorio abierto: ..."
+shiny::runGitHub(repo = "IYF-Vacancies", username = "ArtuFra26", ref = "main")
