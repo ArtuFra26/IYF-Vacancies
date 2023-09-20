@@ -20,7 +20,9 @@ source("funciones_vacantes.R")
 #Lista de directorios
 direcs <- c(
         #Directorio de Arturo    
-        "C:/Users/MEX-1ZNLJL3/OneDrive - International Youth Foundation/Documentos/Vacantes_App_130923.xlsx")
+        "C:/Users/MEX-1ZNLJL3/OneDrive - International Youth Foundation/Documentos/Vacantes_App_130923.xlsx",
+        #Dirección de Lucía
+        "C:/Users/LuciaHernandez/Documents/Datos/Vacantes/2023/App/Vacantes_App_130923.xlsx")
 
 #Función para la lectura de la base
 df_mx <- lapply(direcs, readVacs)
